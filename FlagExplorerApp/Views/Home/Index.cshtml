@@ -1,0 +1,45 @@
+﻿
+
+
+
+
+@model IEnumerable<FlagExplorerApp.Models.Country>
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Countries Flags</h1>
+   
+</div>
+
+<div class="form-horizontal">
+    <hr />
+    <div class="form-group">
+        <table class="table table-responsive" style="width:100px">
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Name)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Flags)
+                </th>
+            </tr>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name.Common)
+                    </td>
+                    <td>
+
+
+                        <img src="@Html.Raw(item.Flags.Svg)" alt="" width="300" height="200">
+
+                       
+                    </td>
+                </tr>
+            }
+        </table>
+    </div>
+</div>
