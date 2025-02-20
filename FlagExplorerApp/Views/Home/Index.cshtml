@@ -1,21 +1,17 @@
-﻿
-
-
-
-
-@model IEnumerable<FlagExplorerApp.Models.Country>
+﻿@model IEnumerable<FlagExplorerApp.Models.Country>
 @{
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Countries Flags</h1>
-   
+<div class="text-md-left">
+    <h4>Countries Flags</h4>
 </div>
+
 
 <div class="form-horizontal">
     <hr />
     <div class="form-group">
+
         <table class="table table-responsive" style="width:100px">
             <tr>
                 <th>
@@ -32,11 +28,11 @@
                         @Html.DisplayFor(modelItem => item.Name.Common)
                     </td>
                     <td>
+                        <a href="@Url.Action("Details", "Home", new { countryname = item.Name.Common })">
 
+                            <img src="@item.Flags.Svg" alt="@item.Name.Common" width="200" height="100" />
+                        </a>
 
-                        <img src="@Html.Raw(item.Flags.Svg)" alt="" width="300" height="200">
-
-                       
                     </td>
                 </tr>
             }
