@@ -2,7 +2,9 @@
 {
     public class CountryInfo
     {
-        public string Name { get; set; }
-        public string Flag { get; set; }
+        public Name Name { get; set; }
+        public Flags Flags { get; set; }
+        public int Population { get; set; }
+        public string[] Capital { get; set; }
     }
 }

@@ -16,24 +16,22 @@ namespace FlagExplorerAPI.Controllers
             _httpClient = httpClient;
         }
 
-        [HttpGet]
+        [HttpGet("GetAllCountries")]
         public async Task<IActionResult> GetCountries()
         {
             var response = await _httpClient.GetStringAsync("https://restcountries.com/v3.1/all");
 
-            var countries =  JsonConvert.DeserializeObject<List<Country>>(response); 
+            var countries = JsonConvert.DeserializeObject<List<Country>>(response);
 
             return Ok(countries);
         }
 
-        [HttpGet("{countryCode}")]
+        [HttpGet("GetCountryDetails/{countryname}")]
         public async Task<IActionResult> GetCountryDetails(string countryname)
         {
-            var response = await _httpClient.GetStringAsync("https://restcountries.com/v3.1/all");
+            var response = await _httpClient.GetStringAsync("https://restcountries.com/v3.1/name/" + countryname);
 
-            var countriesList = JsonConvert.DeserializeObject<List<Country>>(response);
-
-            var country = countriesList.Where(x => x.Name.Common == countryname).ToList();
+            var country = JsonConvert.DeserializeObject<List<CountryInfo>>(response);
 
             return Ok(country);
         }

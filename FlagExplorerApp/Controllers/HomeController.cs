@@ -1,8 +1,10 @@
 using System.Diagnostics;
+using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using FlagExplorerApp.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Routing;
 using Newtonsoft.Json;
 
 namespace FlagExplorerApp.Controllers
@@ -16,35 +18,7 @@ namespace FlagExplorerApp.Controllers
             _logger = logger;
         }
 
-        public async Task<ActionResult> Index4()
-        {
-            string baseUrl = "https://localhost:7133/";
-
-       
-            HttpResponseMessage request = new HttpResponseMessage();
-
-                HttpClientHandler handler = new HttpClientHandler();
-                HttpClient client = new HttpClient(handler);
-               
-           
-                List<Country> countries = new List<Country>();
-
-           
-                var res = await client.GetAsync(baseUrl + "api/Countries");
-                //Checking the response is successful or not which is sent using HttpClient
-                if (res.IsSuccessStatusCode)
-                {
-                    //Storing the response details recieved from web api
-                    var EmpResponse = res.Content.ReadAsStringAsync().Result;
-                    //Deserializing the response recieved from web api and storing into the Employee list
-                    countries = JsonConvert.DeserializeObject<List<Country>>(EmpResponse);
-                }
-             
-                return View(countries);
-            
-        }
-
-        public async Task<ActionResult> Index()
+        public HttpClient GetClient()
         {
             var client = new HttpClient
             {
@@ -56,8 +30,14 @@ namespace FlagExplorerApp.Controllers
             client.DefaultRequestHeaders.Add("x-store-key", "3");
             client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
 
+            return client;
+        }
 
-            var res = await client.GetAsync(client.BaseAddress + "api/Countries");
+        public async Task<ActionResult> Index()
+        {
+            var client = GetClient();
+
+            var res = await client.GetAsync(client.BaseAddress + "api/Countries/GetAllCountries/");
 
             //Checking the response is successful or not which is sent using HttpClient
             if (res.IsSuccessStatusCode)
@@ -67,11 +47,31 @@ namespace FlagExplorerApp.Controllers
                 //Deserializing the response recieved from web api and storing into the Employee list
                 var countries = JsonConvert.DeserializeObject<List<Country>>(EmpResponse);
 
-                if(countries != null)
-                return View(countries);
+                if (countries != null)
+                    return View(countries);
             }
 
-            return View();  
+            return View();
+        }
+
+        public async Task<ActionResult> Details(string countryname)
+        {
+            var client = GetClient();
+
+            var country = await client.GetStringAsync(client.BaseAddress + "api/Countries/GetCountryDetails/" + countryname);
+
+            //Checking the response is successful or not which is sent using HttpClient
+            if (country != null)
+            {
+
+                //Deserializing the response recieved from web api and storing into the Employee list
+                var model = JsonConvert.DeserializeObject<List<Country>>(country);
+
+                if (model != null)
+                    return View("Details", model);
+            }
+
+            return View("Index");
         }
 
         public IActionResult Privacy()
